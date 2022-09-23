@@ -160,19 +160,47 @@ namespace ft
 
 			reference operator[] (size_type n)
 			{
-				
+				return *(this->_begin + n);
 			};
 
-			const_reference operator[] (size_type n) const;
+			const_reference operator[] (size_type n) const
+			{
+				return *(this->_begin + n);
+			};
 
-			reference at (size_type n);
-			const_reference at (size_type n) const;
+			reference at (size_type n)
+			{
+				if (this->_size < n)
+					throw(std::out_of_range("vector"));
+				return *(this->_begin + n);
+			};
 
-			reference front();
-			const_reference front() const;
+			const_reference at (size_type n) const
+			{
+				if (this->_size < n)
+					throw(std::out_of_range("vector"));
+				return *(this->_begin + n);
+			};
 
-			reference back();
-			const_reference back() const;
+			reference front()
+			{
+				return *(this->_size);
+			};
+
+			const_reference front() const
+			{
+				return *(this->_size);
+			};
+
+			reference back()
+			{
+				return *(this->_begin + this->_size - 1);
+			};
+
+			const_reference back() const
+			{
+				return *(this->_begin);
+			};
 
 			value_type* data();
 			const value_type* data() const;		
@@ -195,22 +223,43 @@ namespace ft
 
 			void push_back (const value_type& val)
 			{
-
+				if(this->_size < this->_capacity)
+				{
+					this->_alloc.construct(this->_begin + 1, val);
+					this->_size += 1;
+				}
+				else
+				{
+					resize(this->_size + 1, val);
+				}
 			};
 
-			void pop_back();
+			void pop_back()
+			{
+				if (this->_size)
+					this->_alloc.destroy(this->_begin + (this->_size - 1));
+				this->_size -= 1;
+			
+			};
+
 			ft::iterator insert (ft::iterator position, const value_type& val);
 			void insert (ft::iterator position, size_type n, const value_type& val);
 			template <class InputIterator>
 			void insert (ft::iterator position, InputIterator first, InputIterator last);
+			
 			ft::iterator erase (ft::iterator position);
 			ft::iterator erase (ft::iterator first, ft::iterator last);
+			
 			void swap (vector& x);
+			
 			void clear();
 
 			//==============================/ Allocators /==============================//
 
-			allocator_type get_allocator() const;
+			allocator_type get_allocator() const
+			{
+				return (this->_alloc);
+			};
 
 
 			//==============================/ Other /==============================//
