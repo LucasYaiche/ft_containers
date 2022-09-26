@@ -53,7 +53,7 @@ namespace ft
 			};
 
 			template <class InputIterator>
-			vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
+			vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) : _alloc(alloc), _size(n), _capacity(n * 2)
 			{
 				this->_begin = this->_alloc.allocate(this->_capacity, 0);
 				for (int i = 0; i < this->_size ; i++)
@@ -203,6 +203,7 @@ namespace ft
 			};
 
 			value_type* data();
+
 			const value_type* data() const;		
 
 			//==============================/ Modifiers /==============================//
