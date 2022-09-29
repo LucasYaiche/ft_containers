@@ -2,6 +2,8 @@
 #define UTILS_HPP
 
 # include <cstddef>
+# include <string>
+# include <iostream>
 
 namespace ft
 {
@@ -12,7 +14,7 @@ namespace ft
 	struct	random_access_iterator_tag : public bidirectional_iterator_tag {};
 
 	template <class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T&>
-  	struct iterator 
+  	class iterator 
 	{
 		typedef T         value_type;
 		typedef Distance  difference_type;
