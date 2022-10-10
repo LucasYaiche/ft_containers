@@ -53,49 +53,49 @@ namespace ft
 				return &(operator*());
 			}
 
-			random_access_iterator& operator++()
+			reverse_iterator& operator++()
 			{
 				++this->_ptr;
 				return *this;
 			}
 
-			random_access_iterator operator++(int)
+			reverse_iterator operator++(int)
 			{
-				random_access_iterator tmp(*this);
+				reverse_iterator tmp(*this);
 				operator++(); 
 				return tmp;
 			}
 			
-			random_access_iterator& operator--()
+			reverse_iterator& operator--()
 			{
 				--this->_ptr;
 				return *this;
 			}
 
-			random_access_iterator operator--(int)
+			reverse_iterator operator--(int)
 			{
-				random_access_iterator tmp(*this);
+				reverse_iterator tmp(*this);
 				operator--(); 
 				return tmp;
 			}
 
-			random_access_iterator operator+(difference_type n) const
+			reverse_iterator operator+(difference_type n) const
 			{
-				return (random_access_iterator(this->_ptr + n));
+				return (reverse_iterator(this->_ptr + n));
 			}
 
-			random_access_iterator operator-(difference_type n) const
+			reverse_iterator operator-(difference_type n) const
 			{
-				return (random_access_iterator(this->_ptr - n));
+				return (reverse_iterator(this->_ptr - n));
 			}
 
-			random_access_iterator& operator+=(difference_type n)
+			reverse_iterator& operator+=(difference_type n)
 			{
 				this->_ptr += n;
 				return (*this);
 			}
 
-			random_access_iterator& operator-=(difference_type n)
+			reverse_iterator& operator-=(difference_type n)
 			{
 				this->_ptr -= n;
 				return (*this);
@@ -108,49 +108,49 @@ namespace ft
 	};
 
 	template < typename IterL, typename IterR >
-	bool operator==(random_access_iterator<IterL> const &lhs, random_access_iterator<IterR> const &rhs)
+	bool operator==(reverse_iterator<IterL> const &lhs, reverse_iterator<IterR> const &rhs)
 	{
 		return (lhs.base() == rhs.base());
 	}
 
 	template < typename IterL, typename IterR >
-	bool operator!=(random_access_iterator<IterL> const &lhs, random_access_iterator<IterR> const &rhs)
+	bool operator!=(reverse_iterator<IterL> const &lhs, reverse_iterator<IterR> const &rhs)
 	{
 		return (!(lhs.base() == rhs.base()));
 	}
 
 	template < typename IterL, typename IterR >
-	bool operator<(random_access_iterator<IterL> const &lhs, random_access_iterator<IterR> const &rhs)
+	bool operator<(reverse_iterator<IterL> const &lhs, reverse_iterator<IterR> const &rhs)
 	{
 		return (lhs.base() < rhs.base());
 	}
 
 	template < typename IterL, typename IterR >
-	bool operator>(random_access_iterator<IterL> const &lhs, random_access_iterator<IterR> const &rhs)
+	bool operator>(reverse_iterator<IterL> const &lhs, reverse_iterator<IterR> const &rhs)
 	{
 		return (rhs.base() < lhs.base());
 	}
 
 	template < typename IterL, typename IterR >
-	bool operator<=(random_access_iterator<IterL> const &lhs, random_access_iterator<IterR> const &rhs)
+	bool operator<=(reverse_iterator<IterL> const &lhs, reverse_iterator<IterR> const &rhs)
 	{
 		return (!(rhs.base() < lhs.base()));
 	}
 
 	template < typename IterL, typename IterR >
-	bool operator>=(random_access_iterator<IterL> const &lhs, random_access_iterator<IterR> const &rhs)
+	bool operator>=(reverse_iterator<IterL> const &lhs, reverse_iterator<IterR> const &rhs)
 	{
 		return (!(lhs.base() < rhs.base()));
 	}
 
 	template < typename Iterator >
-	random_access_iterator<Iterator> operator+(typename random_access_iterator<Iterator>::difference_type n, random_access_iterator<Iterator> const &rhs)
+	reverse_iterator<Iterator> operator+(typename reverse_iterator<Iterator>::difference_type n, reverse_iterator<Iterator> const &rhs)
 	{
 		return (rhs.base() + n);
 	}
 
 	template < typename IterL, typename IterR >
-	typename random_access_iterator<IterL>::difference_type operator-(random_access_iterator<IterL> const &lhs, random_access_iterator<IterR> const &rhs)
+	typename reverse_iterator<IterL>::difference_type operator-(reverse_iterator<IterL> const &lhs, reverse_iterator<IterR> const &rhs)
 	{
 		return (lhs.base() - rhs.base());
 	}
