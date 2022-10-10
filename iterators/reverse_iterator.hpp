@@ -11,11 +11,11 @@ namespace ft
 		public:
 
 			typedef				Iterator									iterator_type;
-			typedef	typename	iterator_traits<Iter>::iterator_category	iterator_category;
-			typedef	typename	iterator_traits<Iter>::value_type			value_type;
-			typedef	typename	iterator_traits<Iter>::difference_type		difference_type;
-			typedef	typename	iterator_traits<Iter>::pointer				pointer;
-			typedef	typename	iterator_traits<Iter>::reference			reference;
+			typedef	typename	iterator_traits<Iterator>::iterator_category	iterator_category;
+			typedef	typename	iterator_traits<Iterator>::value_type			value_type;
+			typedef	typename	iterator_traits<Iterator>::difference_type		difference_type;
+			typedef	typename	iterator_traits<Iterator>::pointer				pointer;
+			typedef	typename	iterator_traits<Iterator>::reference			reference;
 
 		protected:
 
@@ -24,14 +24,14 @@ namespace ft
 		public:
 
 			reverse_iterator() 
-			: it() {};
+			: _it() {};
 
 			explicit reverse_iterator(iterator_type it)
 			: _it(it) {};
 
 			template< typename Iter >
 			reverse_iterator(reverse_iterator<Iter> const &rev_it)
-			: it(rev_it.base()) {}
+			: _it(rev_it.base()) {}
 
 			iterator_type base() const
 			{
@@ -45,7 +45,7 @@ namespace ft
 
 			reference operator*() const
 			{
-				return (*this->_ptr);
+				return *this->_ptr;
 			}
 
 			pointer operator->() const
@@ -56,27 +56,27 @@ namespace ft
 			random_access_iterator& operator++()
 			{
 				++this->_ptr;
-				return (*this);
+				return *this;
 			}
 
 			random_access_iterator operator++(int)
 			{
 				random_access_iterator tmp(*this);
 				operator++(); 
-				return (tmp);
+				return tmp;
 			}
 			
 			random_access_iterator& operator--()
 			{
 				--this->_ptr;
-				return (*this);
+				return *this;
 			}
 
 			random_access_iterator operator--(int)
 			{
 				random_access_iterator tmp(*this);
 				operator--(); 
-				return (tmp);
+				return tmp;
 			}
 
 			random_access_iterator operator+(difference_type n) const
