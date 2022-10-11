@@ -138,7 +138,24 @@ namespace ft
 				return this->_size;
 			};
 
-			void resize (size_type n, value_type val = value_type());
+			void resize (size_type n, value_type val = value_type())
+			{
+				if (this->_size > n)
+				{
+					dist = this->_size - n;
+					for (size_type i = this->_size; i > dist; i--)
+					{
+						this->_alloc.destroy(this->_begin + i);
+					}
+				}
+				else if (this->_size < n)
+				{
+					for (size_type i = this->_size; i < dist; i++)
+					{
+						this->_alloc.construct(this->_begin + i, val);
+					}
+				}
+			};
 
 			size_type capacity() const
 			{
@@ -147,12 +164,32 @@ namespace ft
 
 			bool empty() const
 			{
-				if (this->_size)
-					return false;
-				return true;			
+				return this->_size == 0;			
 			};
 
-			void reserve (size_type n);
+			template <class T, class Alloc> 
+   			typename vector<T, Alloc>::size_type vector<T, Alloc>::max_size() const
+			{
+       			return _alloc.max_size();
+   			}
+
+			void reserve (size_type n)
+			{
+				if (n  > this->_alloc.max_size)
+					throw std::length_error("vector::reserve: too high");
+				if (n > this->_capacity)
+				{
+					pointer vec = this->_alloc.allocate(n);
+					size_type old_size = this->_size();
+					for (size_type i = 0; i < this->_size; i++)
+						this->_alloc.construct(vec + i, this->_begin[i]);
+					this->clear();
+					this->_alloc.deallocate(this->_begin, this->_capacity);
+					this->_begin = vec;
+					this->_size = old_size;
+					this->_capacity = n;
+				}
+			};
 
 			//==============================/ Element access /==============================//
 
@@ -198,26 +235,22 @@ namespace ft
 			const_reference back() const
 			{
 				return *(this->_begin);
-			};
-
-			value_type* data();
-
-			const value_type* data() const;		
+			};	
 
 			//==============================/ Modifiers /==============================//
 
 			void assign (size_type n, const value_type& val)
 			{
 				this->_size(n);
-				if (n > this->_capacity)
-					this->_capacity = n;
-				//rajouter la partie qui clear le vector
+				
+				
 			};
 
 			template <class InputIterator>
   			void assign (InputIterator first, InputIterator last)
 			{
-
+				dist = distance(first, last);
+				if 
 			};
 
 			void push_back (const value_type& val)
@@ -241,17 +274,48 @@ namespace ft
 			
 			};
 
-			iterator insert (iterator position, const value_type& val);
-			void insert (iterator position, size_type n, const value_type& val);
+			iterator insert (iterator position, const value_type& val)
+			{
+				this->_alloc.resize(this->_size + 1, val);
+				 
+
+			};
+
+			void insert (iterator position, size_type n, const value_type& val)
+			{
+
+			};
+
 			template <class InputIterator>
-			void insert (iterator position, InputIterator first, InputIterator last);
+			void insert (iterator position, InputIterator first, InputIterator last)
+			{
+
+			};
+
 			
-			iterator erase (iterator position);
-			iterator erase (iterator first, iterator last);
+			iterator erase (iterator position)
+			{
+
+			};
+
+			iterator erase (iterator first, iterator last)
+			{
+
+			};
+
 			
-			void swap (vector& x);
+			void swap (vector& x)
+			{
+
+			};
 			
-			void clear();
+			void clear()
+			{
+				this->size = 0;
+				for (size_type i = 0; i < this->_size; i++)
+					this->_alloc.destroy(this->_begin + i);
+			}
+
 
 			//==============================/ Allocators /==============================//
 
