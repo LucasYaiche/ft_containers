@@ -276,26 +276,51 @@ namespace ft
 
 			iterator insert (iterator position, const value_type& val)
 			{
-				this->_alloc.resize(this->_size + 1, val);
-				 
-
+				insert(position, 1, val);
+				return (position);
 			};
 
 			void insert (iterator position, size_type n, const value_type& val)
 			{
+				size_type	dist = distance(position, this->_begin + size);
+
+				reserve(this->_size + n);
+				for (size_type i = this->_size; i > dist; i--)
+				{
+					*(this->_size - i - 1) = *(this->_size - i);
+				}
+				*(position) = *(this->_size - i);
 
 			};
 
 			template <class InputIterator>
 			void insert (iterator position, InputIterator first, InputIterator last)
 			{
+				size_type	dist = distance(position, this->_begin + size);
 
+				reserve(this->_size + n);
+				for (size_type i = this->_size; i > dist; i--)
+				{
+					*(this->_size - i - n) = *(this->_size - i);
+				}
+				dist = distance(first, last);
+				for(size_type i = 0; i < dist; i++)
+				{
+					*(position) = *(first + i);
+				}
 			};
 
 			
 			iterator erase (iterator position)
 			{
-
+				this->_alloc.destroy(postion);
+				size_type	dist = distance(postion, this.end());
+				for (size_type i = 0; i < dist; i++)
+				{
+					*(position + i) = *(position + i + 1);
+				}
+				this->_size--;
+				return position;
 			};
 
 			iterator erase (iterator first, iterator last)
