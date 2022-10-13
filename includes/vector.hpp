@@ -241,16 +241,19 @@ namespace ft
 
 			void assign (size_type n, const value_type& val)
 			{
-				this->_size(n);
-				
-				
+				this.reserve(n);
+				size_type	dist = distance(this.begin(), this.end());
+				for (size_type i = 0; i < dist; i++)
+					*(this->_begin + i) = val;
 			};
 
 			template <class InputIterator>
   			void assign (InputIterator first, InputIterator last)
 			{
-				dist = distance(first, last);
-				if 
+				size_type	dist = distance(first, end);
+				this.reserve(dist);
+				for (size_type i = 0; i < dist; i++)
+					*(this->_begin + i) = *(first + i);
 			};
 
 			void push_back (const value_type& val)
@@ -269,9 +272,8 @@ namespace ft
 			void pop_back()
 			{
 				if (this->_size)
-					this->_alloc.destroy(this->_begin + (this->_size - 1));
+					this->_alloc.destroy(this.end());
 				this->_size -= 1;
-			
 			};
 
 			iterator insert (iterator position, const value_type& val)
@@ -325,7 +327,13 @@ namespace ft
 
 			iterator erase (iterator first, iterator last)
 			{
-
+				size_type	dist = distance(postion, last);
+				for (size_type i = 0; i < dist; i++)
+					this->_alloc.destroy(first + i);
+				for (size_type i = 0; i < dist; i++)
+					*(first + i) = *(first + i + 1);
+				this->_size -= dist;
+				return position;
 			};
 
 			
