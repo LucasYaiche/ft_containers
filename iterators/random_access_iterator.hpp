@@ -28,7 +28,7 @@ namespace ft
 			: _ptr(ptr){};
 
 			random_access_iterator(const random_access_iterator& rai)
-			: _ptr(rai.other){};
+			: _ptr(rai._ptr){};
 
 			~random_access_iterator(void){};
 

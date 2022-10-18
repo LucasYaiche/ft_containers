@@ -1,7 +1,7 @@
 #include <vector>
 #include <iostream>
 
-// #include "includes/vector.hpp"
+#include "includes/vector.hpp"
 
 void	show_vector(std::vector<int>::iterator	first, std::vector<int>::iterator	last)
 {
@@ -12,14 +12,16 @@ void	show_vector(std::vector<int>::iterator	first, std::vector<int>::iterator	la
 
 int main(void)
 {
-	std::vector<int> test;
+	ft::vector<int> first;                                
+	ft::vector<int> second (4,100);                       
+	ft::vector<int> third (second.begin(),second.end());  
+	ft::vector<int> fourth (third);
 	
-	test.assign(7, 1);
-	show_vector(test.begin(), test.end());
-	test.assign(6,2);
-	show_vector(test.begin(), test.end());
-	test.assign(7,3);
-	show_vector(test.begin(), test.end());
+
+	std::cout << first.size() << std::endl;
+	std::cout << second.size() << std::endl;
+	std::cout << third.size() << std::endl;
+	std::cout << fourth.size() << std::endl;
 
 	return 0;
 }
