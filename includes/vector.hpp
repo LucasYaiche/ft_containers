@@ -56,7 +56,7 @@ namespace ft
 			template <class InputIterator>
 			vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
 			typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = NULL)
-			: _alloc(alloc), _size(last - first), _capacity((last - first) * 2)
+			: _alloc(alloc), _size(distance(first, last)), _capacity(distance(first, last) * 2)
 			{
 				this->_begin = this->_alloc.allocate(this->_capacity, 0);
 				for (size_type i = 0; i < this->_size ; i++)
@@ -150,7 +150,7 @@ namespace ft
 				size_type	dist = this->_size - n;
 				if (this->_size > n)
 				{
-					for (size_type i = this->_size; i > dist; i--)
+					for (size_type i = this->_size; i > dist; i++)
 					{
 						this->_alloc.destroy(this->_begin + i);
 					}
@@ -181,12 +181,12 @@ namespace ft
 
 			void reserve (size_type n)
 			{
-				if (n  > this->_alloc.max_size)
+				if (n  > this->_alloc.max_size())
 					throw std::length_error("vector::reserve: too high");
 				if (n > this->_capacity)
 				{
 					pointer vec = this->_alloc.allocate(n);
-					size_type old_size = this->_size();
+					size_type old_size = this->_size;
 					for (size_type i = 0; i < this->_size; i++)
 						this->_alloc.construct(vec + i, this->_begin[i]);
 					this->clear();
@@ -225,12 +225,12 @@ namespace ft
 
 			reference front()
 			{
-				return *(this->_size);
+				return *(this->_begin);
 			};
 
 			const_reference front() const
 			{
-				return *(this->_size);
+				return *(this->_begin);
 			};
 
 			reference back()
@@ -240,7 +240,7 @@ namespace ft
 
 			const_reference back() const
 			{
-				return *(this->_begin);
+				return *(this->_begin + this->_size - 1);
 			};	
 
 			//==============================/ Modifiers /==============================//
@@ -256,7 +256,7 @@ namespace ft
   			void assign (InputIterator first, InputIterator last,
 			typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = NULL)
 			{
-				size_type	dist = last - first;
+				size_type	dist = distance(first, last);
 				this->reserve(dist);
 				for (size_type i = 0; i < dist; i++)
 					*(this->_begin + i) = *(first + i);
@@ -266,7 +266,7 @@ namespace ft
 			{
 				if(this->_size < this->_capacity)
 				{
-					this->_alloc.construct(this->_begin + 1, val);
+					this->_alloc.construct(this->_begin, val);
 					this->_size += 1;
 				}
 				else
@@ -278,7 +278,7 @@ namespace ft
 			void pop_back()
 			{
 				if (this->_size)
-					this->_alloc.destroy(this->end());
+					this->_alloc.destroy(this->_begin + this->_size - 1);
 				this->_size -= 1;
 			};
 
@@ -290,12 +290,12 @@ namespace ft
 
 			void insert (iterator position, size_type n, const value_type& val)
 			{
-				size_type	dist = this->end() - position;
+				size_type	dist = distance(position, this->end());
 
 				reserve(this->_size + n);
 				for (size_type i = this->_size; i > dist; i--)
 				{
-					*(this->_size - i - 1) = *(this->_size - i);
+					*(this->end() - i - 1) = *(this->end() - i);
 				}
 				*(position) = val;
 
@@ -305,28 +305,30 @@ namespace ft
 			void insert (iterator position, InputIterator first, InputIterator last,
 			typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = NULL)
 			{
-				size_type	dist = this->end() - position;;
+				size_type	dist = distance(position, this->end());
 
 				reserve(this->_size + dist);
 				for (size_type i = this->_size; i > dist; i--)
 				{
-					*(this->_size - i) = *(this->_size - i);
+					*(this->end() - i - 1) = *(this->end() - i);
 				}
-				dist = last - first;
-				for(size_type i = 0; i < dist; i++)
+				dist = distance(first, last);
+				for(InputIterator it = first; it < last; it++)
 				{
-					*(position) = *(first + i);
+					*(position++) = *(it);
 				}
 			};
 
 			
 			iterator erase (iterator position)
 			{
-				this->_alloc.destroy(position);
-				size_type	dist = this->end() - position;
-				for (size_type i = 0; i < dist; i++)
+				size_type i = 0;
+				for (iterator it = this->_begin; it < position; it++)
+					i++;
+				this->_alloc.destroy(this->_begin + i);
+				for (size_type j = 0; j < i; j++)
 				{
-					*(position + i) = *(position + i + 1);
+					*(this->_begin + i + j) = *(this->_begin + i + j + 1);
 				}
 				this->_size--;
 				return position;
@@ -334,11 +336,15 @@ namespace ft
 
 			iterator erase (iterator first, iterator last)
 			{
-				size_type	dist = last - first;
-				for (size_type i = 0; i < dist; i++)
-					this->_alloc.destroy(first + i);
-				for (size_type i = 0; i < dist; i++)
-					*(first + i) = *(first + i + 1);
+				size_type i = 0;
+				for (iterator it = this->_begin; it < first; it++)
+					i++;
+				size_type	dist = distance(first, last);
+
+				for (size_type j = 0; j < dist; j++)
+					this->_alloc.destroy(this->_begin + i + j);
+				for (size_type j = 0; j < dist; j++)
+					*(this->_begin + i + j) = *(this->_begin + i + j + 1);
 				this->_size -= dist;
 				return first;
 			};
@@ -364,7 +370,7 @@ namespace ft
 			
 			void clear()
 			{
-				this->size = 0;
+				this->_size = 0;
 				for (size_type i = 0; i < this->_size; i++)
 					this->_alloc.destroy(this->_begin + i);
 			}

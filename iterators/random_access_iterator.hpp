@@ -36,7 +36,7 @@ namespace ft
 			{
 				if (this != &rhs)
 				{
-					rhs._ptr = this->_ptr;
+					this->_ptr = rhs._ptr;
 				}
 				return *this;
 			}
