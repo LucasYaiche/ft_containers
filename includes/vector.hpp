@@ -37,7 +37,6 @@ namespace ft
 
 			//==============================/ Constructor & overlaod /==============================//
 		public:
-
 			explicit	vector(const allocator_type& alloc = allocator_type())
 			: _alloc(alloc), _begin(NULL), _size(0), _capacity(0)
 			{
@@ -86,7 +85,6 @@ namespace ft
 				}
 				return *this;
 			};
-
 			//==============================/ Destructor /==============================//
 
 			~vector()
@@ -147,21 +145,19 @@ namespace ft
 
 			void resize (size_type n, value_type val = value_type())
 			{
-				size_type	dist = this->_size - n;
-				if (this->_size > n)
-				{
-					for (size_type i = this->_size; i > dist; i++)
-					{
-						this->_alloc.destroy(this->_begin + i);
-					}
+				if(n > this->_capacity)
+					reserve(n);
+				if (n > this->_size)
+				{ 
+					for (size_type i = this->_size; i < n ; i++)
+						_alloc.construct(this->_begin + i, val);
 				}
-				else if (this->_size < n)
+				else
 				{
-					for (size_type i = this->_size; i < dist; i++)
-					{
-						this->_alloc.construct(this->_begin + i, val);
-					}
+					for (size_type i = n; i < this->_size ; i++)
+						_alloc.destroy(this->_begin + i);
 				}
+				_size = n;
 			};
 
 			size_type capacity() const
@@ -370,9 +366,9 @@ namespace ft
 			
 			void clear()
 			{
-				this->_size = 0;
 				for (size_type i = 0; i < this->_size; i++)
 					this->_alloc.destroy(this->_begin + i);
+				this->_size = 0;
 			}
 
 
