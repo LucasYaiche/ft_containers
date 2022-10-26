@@ -55,7 +55,7 @@ namespace ft
 			template <class InputIterator>
 			vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
 			typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = NULL)
-			: _alloc(alloc), _size(distance(first, last)), _capacity(distance(first, last) * 2)
+			: _alloc(alloc), _size(ft::distance(first, last)), _capacity(ft::distance(first, last) * 2)
 			{
 				this->_begin = this->_alloc.allocate(this->_capacity, 0);
 				for (size_type i = 0; i < this->_size ; i++)
@@ -78,10 +78,7 @@ namespace ft
 			{
 				if (this != &x)
 				{
-					this->_alloc = x._alloc;
-					this->_begin = x._begin;
-					this->_size = x._size;
-					this->_capacity = x._capacity;
+					this->assign(x.begin(), x.end());
 				}
 				return *this;
 			};
@@ -189,7 +186,7 @@ namespace ft
 					this->_alloc.deallocate(this->_begin, this->_capacity);
 					this->_begin = vec;
 					this->_size = old_size;
-					this->_capacity = n;
+					this->_capacity = n * 2;
 				}
 			};
 
@@ -243,26 +240,33 @@ namespace ft
 
 			void assign (size_type n, const value_type& val)
 			{
-				this->reserve(n);
+				this->reserve(n * 2);
 				for (size_type i = 0; i < this->_size; i++)
-					*(this->_begin + i) = val;
+					this->_alloc.construct(this->_begin + i, val);
+				this->_size = n;
 			};
 
 			template <class InputIterator>
   			void assign (InputIterator first, InputIterator last,
 			typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = NULL)
 			{
-				size_type	dist = distance(first, last);
-				this->reserve(dist);
+				size_type	dist = ft::distance(first, last);
+				pointer vec = this->_alloc.allocate(dist * 2);
+
 				for (size_type i = 0; i < dist; i++)
-					*(this->_begin + i) = *(first + i);
+					this->_alloc.construct(vec + i, *first++);
+				this->clear();
+				this->_alloc.deallocate(this->_begin, this->_capacity);
+				this->_begin = vec;
+				this->_size = dist;
+				this->_capacity = dist * 2;
 			};
 
 			void push_back (const value_type& val)
 			{
 				if(this->_size < this->_capacity)
 				{
-					this->_alloc.construct(this->_begin, val);
+					this->_alloc.construct(this->_begin + this->_size, val);
 					this->_size += 1;
 				}
 				else
@@ -286,33 +290,57 @@ namespace ft
 
 			void insert (iterator position, size_type n, const value_type& val)
 			{
-				size_type	dist = distance(position, this->end());
-
-				reserve(this->_size + n);
-				for (size_type i = this->_size; i > dist; i--)
+				size_type	gap = 0;
+				iterator	tmp = this->_begin;
+				while(tmp != position)
 				{
-					*(this->end() - i - 1) = *(this->end() - i);
+					tmp++;
+					gap++;
 				}
-				*(position) = val;
+				reserve(this->_size + n * 2);
+				// for (iterator it=this->begin(); it<this->end(); it++)
+				// 	std::cout << ' ' << *it;
+				// std::cout << '\n';
+				for (size_type i = 0; i < n; i++)
+				{
+					this->_alloc.construct(this->_begin + gap + i + n, tmp[i]);
+					this->_alloc.destroy(this->_begin + gap + i);
+					// for (iterator it=this->begin(); it<this->end(); it++)
+   					// 	std::cout << ' ' << *it;
+  					// std::cout << '\n';
+					std::cout << *(this->_begin + gap + i) << std::endl;
+				}
+				this->_size += n;
 
+				for (size_type i = 0; i < n; i++)
+				{
+					this->_alloc.construct(this->_begin + gap + i, val);
+				}
 			};
 
 			template <class InputIterator>
 			void insert (iterator position, InputIterator first, InputIterator last,
 			typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = NULL)
 			{
-				size_type	dist = distance(position, this->end());
-
-				reserve(this->_size + dist);
-				for (size_type i = this->_size; i > dist; i--)
+				size_type	gap = 0;
+				iterator	tmp = this->_begin;
+				size_t		dist = ft::distance(first, last);
+				while(tmp != position)
 				{
-					*(this->end() - i - 1) = *(this->end() - i);
+					tmp++;
+					gap++;
 				}
-				dist = distance(first, last);
-				for(InputIterator it = first; it < last; it++)
+				reserve(this->_size + dist * 2);
+				for (size_type i = 0; i < dist; i++)
 				{
-					*(position++) = *(it);
+					this->_alloc.construct(this->_begin + gap + i + dist, tmp[i]);
+					this->_alloc.destroy(this->_begin + gap + i);
 				}
+				for (size_type i = 0; i < dist; i++)
+				{
+					this->_alloc.construct(this->_begin + gap + i, *first++);
+				}
+				this->_size += dist;
 			};
 
 			
@@ -335,7 +363,7 @@ namespace ft
 				size_type i = 0;
 				for (iterator it = this->_begin; it < first; it++)
 					i++;
-				size_type	dist = distance(first, last);
+				size_type	dist = ft::distance(first, last);
 
 				for (size_type j = 0; j < dist; j++)
 					this->_alloc.destroy(this->_begin + i + j);
