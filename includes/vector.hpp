@@ -240,8 +240,8 @@ namespace ft
 
 			void assign (size_type n, const value_type& val)
 			{
-				this->reserve(n * 2);
-				for (size_type i = 0; i < this->_size; i++)
+				this->reserve(n);
+				for (size_type i = 0; i < n; i++)
 					this->_alloc.construct(this->_begin + i, val);
 				this->_size = n;
 			};
@@ -251,15 +251,10 @@ namespace ft
 			typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = NULL)
 			{
 				size_type	dist = ft::distance(first, last);
-				pointer vec = this->_alloc.allocate(dist * 2);
-
+				this->reserve(dist);
 				for (size_type i = 0; i < dist; i++)
-					this->_alloc.construct(vec + i, *first++);
-				this->clear();
-				this->_alloc.deallocate(this->_begin, this->_capacity);
-				this->_begin = vec;
+					this->_alloc.construct(this->_begin + i, *first++);
 				this->_size = dist;
-				this->_capacity = dist * 2;
 			};
 
 			void push_back (const value_type& val)
@@ -290,21 +285,15 @@ namespace ft
 
 			void insert (iterator position, size_type n, const value_type& val)
 			{
-				size_type	gap = 0;
+				difference_type	gap = position - this->begin();
 				
-				if (position != this->begin())
-					for(iterator it = this->begin(); it != position; it++)
-						gap++;
-				else 
-					gap = 0;
 				reserve(this->_size + n);
-				std::cout << "here" << std::endl;
-				for (size_type i = this->_size - 1; i >= gap; i--)
+				for (difference_type i = this->_size - 1; i >= gap; i--)
 				{
 					this->_alloc.construct(this->_begin + n + i, this->_begin[i]);
 					this->_alloc.destroy(this->_begin + i);
 				}
-				for (size_type i = 0; i < n; i++)
+				for (size_type i = 0; i != n; i++)
 				{
 					this->_alloc.construct(this->_begin + gap + i, val);
 				}
