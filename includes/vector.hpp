@@ -291,86 +291,67 @@ namespace ft
 			void insert (iterator position, size_type n, const value_type& val)
 			{
 				size_type	gap = 0;
-				iterator	tmp = this->_begin;
-				while(tmp != position)
+				
+				if (position != this->begin())
+					for(iterator it = this->begin(); it != position; it++)
+						gap++;
+				else 
+					gap = 0;
+				reserve(this->_size + n);
+				std::cout << "here" << std::endl;
+				for (size_type i = this->_size - 1; i >= gap; i--)
 				{
-					tmp++;
-					gap++;
+					this->_alloc.construct(this->_begin + n + i, this->_begin[i]);
+					this->_alloc.destroy(this->_begin + i);
 				}
-				reserve(this->_size + n * 2);
-				// for (iterator it=this->begin(); it<this->end(); it++)
-				// 	std::cout << ' ' << *it;
-				// std::cout << '\n';
-				for (size_type i = 0; i < n; i++)
-				{
-					this->_alloc.construct(this->_begin + gap + i + n, tmp[i]);
-					this->_alloc.destroy(this->_begin + gap + i);
-					// for (iterator it=this->begin(); it<this->end(); it++)
-   					// 	std::cout << ' ' << *it;
-  					// std::cout << '\n';
-					std::cout << *(this->_begin + gap + i) << std::endl;
-				}
-				this->_size += n;
-
 				for (size_type i = 0; i < n; i++)
 				{
 					this->_alloc.construct(this->_begin + gap + i, val);
 				}
+				this->_size += n;
 			};
 
 			template <class InputIterator>
 			void insert (iterator position, InputIterator first, InputIterator last,
 			typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = NULL)
 			{
-				size_type	gap = 0;
-				iterator	tmp = this->_begin;
-				size_t		dist = ft::distance(first, last);
-				while(tmp != position)
+				difference_type		dist = ft::distance(first, last);
+				difference_type		gap = position - this->begin();
+
+				reserve(this->_size + dist);
+				for(difference_type i = this->_size - 1; i >= gap; i--)
 				{
-					tmp++;
-					gap++;
+					this->_alloc.construct(this->_begin  + dist + i, this->_begin[i]);
+					this->_alloc.destroy(this->_begin + i);
 				}
-				reserve(this->_size + dist * 2);
-				for (size_type i = 0; i < dist; i++)
+				for (InputIterator it = first; it != last; it++)
 				{
-					this->_alloc.construct(this->_begin + gap + i + dist, tmp[i]);
-					this->_alloc.destroy(this->_begin + gap + i);
-				}
-				for (size_type i = 0; i < dist; i++)
-				{
-					this->_alloc.construct(this->_begin + gap + i, *first++);
+					this->_alloc.construct(this->_begin + gap++, *it);
 				}
 				this->_size += dist;
 			};
 
-			
+			// a modifier !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			iterator erase (iterator position)
 			{
-				size_type i = 0;
-				for (iterator it = this->_begin; it < position; it++)
-					i++;
-				this->_alloc.destroy(this->_begin + i);
-				for (size_type j = 0; j < i; j++)
+				size_type	pos = (position - begin());
+				for(size_type i = pos; i < _size - 1; i++)
 				{
-					*(this->_begin + i + j) = *(this->_begin + i + j + 1);
+					_alloc.construct(this->_begin + i, *(this->_begin + i+  1));
+					_alloc.destroy(this->_begin + i + 1);
 				}
 				this->_size--;
+				_alloc.destroy(this->_begin + this->_size - 1);
 				return position;
 			};
 
 			iterator erase (iterator first, iterator last)
 			{
-				size_type i = 0;
-				for (iterator it = this->_begin; it < first; it++)
-					i++;
-				size_type	dist = ft::distance(first, last);
+				size_type pos = last - first;
 
-				for (size_type j = 0; j < dist; j++)
-					this->_alloc.destroy(this->_begin + i + j);
-				for (size_type j = 0; j < dist; j++)
-					*(this->_begin + i + j) = *(this->_begin + i + j + 1);
-				this->_size -= dist;
-				return first;
+			while(pos--)
+				erase(first);
+			return first;
 			};
 
 			
@@ -413,13 +394,15 @@ namespace ft
 	template <class T, class Alloc>
 	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
-		return (lhs.size() != rhs.size() && equal (lhs.begin(), lhs.end(), rhs.begin()));
+		if (lhs.size() != rhs.size())
+			return false;
+		return 	(equal(lhs.begin(), lhs.end(), rhs.begin()));
 	};
 
 	template <class T, class Alloc>
 	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
-		return !(lhs == rhs);
+		return (!(lhs == rhs));
 	};
 
 	template <class T, class Alloc>
@@ -431,7 +414,7 @@ namespace ft
 	template <class T, class Alloc>
 	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
-		return !(rhs < lhs);
+		return (!(rhs < lhs));
 	};
 
 	template <class T, class Alloc>
@@ -443,7 +426,7 @@ namespace ft
 	template <class T, class Alloc>
 	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
 	{
-		return !(lhs < rhs);
+		return (!(lhs < rhs));
 	};
 
 	template <class T, class Alloc>

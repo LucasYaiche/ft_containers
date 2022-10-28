@@ -129,19 +129,19 @@ namespace ft
 	template < typename IterL, typename IterR >
 	bool operator>(reverse_iterator<IterL> const &lhs, reverse_iterator<IterR> const &rhs)
 	{
-		return (rhs.base() < lhs.base());
+		return (lhs.base() < rhs.base());
 	}
 
 	template < typename IterL, typename IterR >
 	bool operator<=(reverse_iterator<IterL> const &lhs, reverse_iterator<IterR> const &rhs)
 	{
-		return (rhs.base() >= lhs.base());
+		return (lhs.base() >= rhs.base());
 	}
 
 	template < typename IterL, typename IterR >
 	bool operator>=(reverse_iterator<IterL> const &lhs, reverse_iterator<IterR> const &rhs)
 	{
-		return (lhs.base() < rhs.base());
+		return (lhs.base() <= rhs.base());
 	}
 
 	template < typename Iterator >
