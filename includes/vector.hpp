@@ -143,7 +143,7 @@ namespace ft
 			void resize (size_type n, value_type val = value_type())
 			{
 				if(n > this->_capacity)
-					reserve(n);
+					reserve(n * 2);
 				if (n > this->_size)
 				{ 
 					for (size_type i = this->_size; i < n ; i++)
@@ -186,7 +186,7 @@ namespace ft
 					this->_alloc.deallocate(this->_begin, this->_capacity);
 					this->_begin = vec;
 					this->_size = old_size;
-					this->_capacity = n * 2;
+					this->_capacity = n;
 				}
 			};
 
@@ -240,7 +240,7 @@ namespace ft
 
 			void assign (size_type n, const value_type& val)
 			{
-				this->reserve(n);
+				this->reserve(n * 2);
 				for (size_type i = 0; i < n; i++)
 					this->_alloc.construct(this->_begin + i, val);
 				this->_size = n;
@@ -251,7 +251,7 @@ namespace ft
 			typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = NULL)
 			{
 				size_type	dist = ft::distance(first, last);
-				this->reserve(dist);
+				this->reserve(dist * 2);
 				for (size_type i = 0; i < dist; i++)
 					this->_alloc.construct(this->_begin + i, *first++);
 				this->_size = dist;
@@ -279,15 +279,17 @@ namespace ft
 
 			iterator insert (iterator position, const value_type& val)
 			{
+				difference_type	gap = position - this->begin();
+
 				insert(position, 1, val);
-				return (position);
+				return (this->begin() + gap);
 			};
 
 			void insert (iterator position, size_type n, const value_type& val)
 			{
 				difference_type	gap = position - this->begin();
 				
-				reserve(this->_size + n);
+				reserve((this->_size + n) * 2);
 				for (difference_type i = this->_size - 1; i >= gap; i--)
 				{
 					this->_alloc.construct(this->_begin + n + i, this->_begin[i]);
@@ -307,7 +309,7 @@ namespace ft
 				difference_type		dist = ft::distance(first, last);
 				difference_type		gap = position - this->begin();
 
-				reserve(this->_size + dist);
+				reserve((this->_size + dist) * 2);
 				for(difference_type i = this->_size - 1; i >= gap; i--)
 				{
 					this->_alloc.construct(this->_begin  + dist + i, this->_begin[i]);
