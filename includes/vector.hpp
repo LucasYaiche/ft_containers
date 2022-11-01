@@ -322,17 +322,16 @@ namespace ft
 				this->_size += dist;
 			};
 
-			// a modifier !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			iterator erase (iterator position)
 			{
-				size_type	pos = (position - begin());
-				for(size_type i = pos; i < _size - 1; i++)
+				size_type	pos = (position - this->begin());
+				for(size_type i = pos; i < this->_size; i++)
 				{
 					_alloc.construct(this->_begin + i, *(this->_begin + i+  1));
 					_alloc.destroy(this->_begin + i + 1);
 				}
 				this->_size--;
-				_alloc.destroy(this->_begin + this->_size - 1);
+				_alloc.destroy(this->_begin + this->_size);
 				return position;
 			};
 
@@ -340,9 +339,9 @@ namespace ft
 			{
 				size_type pos = last - first;
 
-			while(pos--)
-				erase(first);
-			return first;
+				while(pos--)
+					erase(first);
+				return first;
 			};
 
 			
