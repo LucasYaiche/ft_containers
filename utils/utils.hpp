@@ -5,6 +5,8 @@
 # include <string>
 # include <iostream>
 # include "../iterators/iterator_traits.hpp"
+# include "pair.hpp"
+# include "../utils/utils.hpp"
 
 namespace ft
 {
@@ -65,24 +67,36 @@ namespace ft
 	typename iterator_traits<It>::difference_type __distance(It first, It last, input_iterator_tag)
 	{
 		typename iterator_traits<It>::difference_type result = 0;
-		while (first != last) {
+		while (first != last) 
+		{
 			++first;
 			++result;
 		}
 		return result;
-	}
+	};
 	
 	template<class RAI>
 	typename iterator_traits<RAI>::difference_type __distance(RAI first, RAI last, random_access_iterator_tag)
 	{
 		return last - first;
-	}
+	};
 	
 	template<class It>
 	typename iterator_traits<It>::difference_type distance(It first, It last)
 	{
 		return __distance(first, last, typename iterator_traits<It>::iterator_category());
-	}
+	};
+
+	template <class InputIterator1, class InputIterator2>
+  	bool equal ( InputIterator1 first1, InputIterator1 last1, InputIterator2 first2 )
+	{
+		while (first1!=last1) {
+			if (!(*first1 == *first2))
+				return false;
+			++first1; ++first2;
+		}
+		return true;
+	};
 }
 
 #endif

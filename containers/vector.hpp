@@ -170,7 +170,7 @@ namespace ft
 			size_type max_size() const
 			{
        			return _alloc.max_size();
-   			}
+   			};
 
 			void reserve (size_type n)
 			{
@@ -310,7 +310,7 @@ namespace ft
 				difference_type		gap = position - this->begin();
 
 				reserve((this->_size + dist) * 2);
-				for(difference_type i = this->_size - 1; i >= gap; i--)
+		 		for(difference_type i = this->_size - 1; i >= gap; i--)
 				{
 					this->_alloc.construct(this->_begin  + dist + i, this->_begin[i]);
 					this->_alloc.destroy(this->_begin + i);
@@ -368,7 +368,7 @@ namespace ft
 				for (size_type i = 0; i < this->_size; i++)
 					this->_alloc.destroy(this->_begin + i);
 				this->_size = 0;
-			}
+			};
 
 
 			//==============================/ Allocators /==============================//
