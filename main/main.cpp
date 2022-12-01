@@ -13,9 +13,6 @@
 #include <time.h>
 #include <sys/time.h>
 
-#define NAMESPACE std // change to STD if you want to compare with the STL
-
-
 time_t timer() {
 	struct timeval start = {};
 	gettimeofday(&start, NULL);
@@ -40,7 +37,7 @@ int main()
 	{
 		time_t start = timer();
 		std::cout << "~~~~TEST WITH INT~~~~~" << std::endl;
-		NAMESPACE::vector<int> a;
+		TESTED_NAMESPACE::vector<int> a;
 		std::cout << "----SIZE----" << std::endl;
 		std::cout << a.size() << std::endl;
 		std::cout << "----CAPACITY----" << std::endl;
@@ -74,7 +71,7 @@ int main()
 		std::cout << "----BACK----" << std::endl;
 		std::cout << a.back() << std::endl;
 		std::cout << "----COPY_CONSTRUCTOR----" << std::endl;
-		NAMESPACE::vector<int> b(a);
+		TESTED_NAMESPACE::vector<int> b(a);
 		std::cout << "----ASSIGN----" << std::endl;
 		std::cout << "before : size = " << a.size() << " && capacity = " << a.capacity() << std::endl;
 		a.assign(10, 400);
@@ -112,7 +109,7 @@ int main()
 		std::cout << "lets remove the end element" << std::endl;
 		a.erase(a.end() - 1);
 		std::cout << "lets remove the two first elements" << std::endl;
-		NAMESPACE::vector<int>::iterator it = a.begin();
+		TESTED_NAMESPACE::vector<int>::iterator it = a.begin();
 		it = it + 2;
 		a.erase(a.begin(), it);
 		for (unsigned int i = 0; i < a.size(); i++)
@@ -132,9 +129,9 @@ int main()
 		std::cout << "a < b : "<< (a < b) << std::endl;
 		std::cout << "~~~~MINI TEST WITH CONST CHAR *~~~~" << std::endl;
 		std::cout << "----CONSTRUCTOR WITH VALUE----" << std::endl;
-		NAMESPACE::vector<const char *> c(4, "coucou");
+		TESTED_NAMESPACE::vector<const char *> c(4, "coucou");
 		std::cout << "----CONSTRUCTOR WITH ITERATORS----" << std::endl;
-		NAMESPACE::vector<const char *> d(c.begin(), c.end());
+		TESTED_NAMESPACE::vector<const char *> d(c.begin(), c.end());
 		for (unsigned int i = 0; i < d.size(); i++)
 		{
 			std::cout << "Index " << i << " : value = " << d[i] << std::endl;
@@ -151,7 +148,7 @@ int main()
 	std::cout << "STACK" << std::endl << std::endl;
 	{
 		time_t start = timer();
-		NAMESPACE::stack<int> a;
+		TESTED_NAMESPACE::stack<int> a;
 		std::cout << "~~~TEST WITH INT :~~~" << std::endl;
 		std::cout << "----EMPTY----" << std::endl;
 		std::cout << a.empty() << std::endl;
@@ -178,7 +175,7 @@ int main()
 		std::cout << a.size() << std::endl;
 		std::cout << "----TOP----" << std::endl;
 		std::cout << a.top() << std::endl;
-		NAMESPACE::stack<float> b;
+		TESTED_NAMESPACE::stack<float> b;
 		std::cout << std::endl;
 		std::cout << "~~~TEST WITH FLOAT :~~~" << std::endl;
 		std::cout << "----EMPTY----" << std::endl;
@@ -221,7 +218,7 @@ int main()
 	{
 		time_t start = timer();
 		std::cout << "----DEFAULT CONSTRUCTOR----" << std::endl;
-		NAMESPACE::map<int, float> a;
+		TESTED_NAMESPACE::map<int, float> a;
 		std::cout << "----EMPTY----" << std::endl;
 		std::cout << a.empty() << std::endl;
 		std::cout << "----SIZE----" << std::endl;
@@ -236,14 +233,14 @@ int main()
 		std::cout << "----SIZE----" << std::endl;
 		std::cout << a.size() << std::endl;
 		std::cout << "----OPERATOR[] + INSERT----" << std::endl;
-		a.insert(NAMESPACE::make_pair(6, 0.35f));
+		a.insert(TESTED_NAMESPACE::make_pair(6, 0.35f));
 		std::cout << "at the index 6, there is the value " << a[6] << std::endl;
 		std::cout << "----EMPTY----" << std::endl;
 		std::cout << a.empty() << std::endl;
 		std::cout << "----SIZE----" << std::endl;
 		std::cout << a.size() << std::endl;
 		std::cout << "----COPY CONSTRUCTOR----" << std::endl;
-		NAMESPACE::map<int, float> b(a);
+		TESTED_NAMESPACE::map<int, float> b(a);
 		std::cout << "----CLEAR----" << std::endl;
 		a.clear();
 		std::cout << "----EMPTY----" << std::endl;
@@ -266,13 +263,13 @@ int main()
 		for (int i = 0; i < 20; i++)
 		{
 			ran = rand() % 10000;
-			a.insert(a.begin(), NAMESPACE::make_pair(ran, f));
+			a.insert(a.begin(), TESTED_NAMESPACE::make_pair(ran, f));
 			f += 1.5f;
 			std::cout << "at index " << ran << " : value = " << a[ran] << std::endl;
 		}
 		std::cout << "----CONSTRUCTOR WITH ITERATORS + BEGIN + END----" << std::endl;
-		NAMESPACE::map<int, float> c(a.begin(), a.end());
-		NAMESPACE::map<int, float>::iterator it = c.begin();
+		TESTED_NAMESPACE::map<int, float> c(a.begin(), a.end());
+		TESTED_NAMESPACE::map<int, float>::iterator it = c.begin();
 		for (unsigned int i = 0; i < c.size(); i++)
 		{
 			std::cout << "at index " << it->first << " : value = " << c[it->first] << std::endl;
@@ -308,11 +305,11 @@ int main()
 		it = a.lower_bound(4427);
 		std::cout << "at index " << it->first << " : value = " << a[it->first] << std::endl;
 		std::cout << "----EQUAL_RANGE----" << std::endl;
-		NAMESPACE::pair<NAMESPACE::map<int, float>::iterator, NAMESPACE::map<int, float>::iterator> eq = a.equal_range(4427);
+		TESTED_NAMESPACE::pair<TESTED_NAMESPACE::map<int, float>::iterator, TESTED_NAMESPACE::map<int, float>::iterator> eq = a.equal_range(4427);
 		std::cout << "lower_bound at index " << eq.first->first << " : value = " << a[eq.first->first] << std::endl;
 		std::cout << "upper_bound at index " << eq.second->first << " : value = " << a[eq.second->first] << std::endl;
 		std::cout << "----RBEGIN + REND----" << std::endl;
-		NAMESPACE::map<int, float>::reverse_iterator rit = a.rbegin(), rite = a.rend();
+		TESTED_NAMESPACE::map<int, float>::reverse_iterator rit = a.rbegin(), rite = a.rend();
 		while (rit != rite)
 		{
 			std::cout << "at index " << rit->first << " : value = " << a[rit->first] << std::endl;

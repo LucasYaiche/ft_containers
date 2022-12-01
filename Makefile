@@ -1,69 +1,56 @@
-# #=======================================#
-# #[Containers] Fonctions partie principale#
-# #=======================================#
+#=======================================#
+#[Containers] Fonctions partie principale#
+#=======================================#
 
-# CONTAINERS_SRC = main.cpp
+CONTAINERS_SRC = main.cpp
 
-# CONTAINERS_OBJ = ${addprefix ${OBJDIR}, ${CONTAINERS_SRC:%.c=%.o}}
+CONTAINERS_OBJ_STD = ${addprefix ${OBJDIR}, ${CONTAINERS_SRC:%.cpp=%.o}}
 
-# #====#
-# #Tags#
-# #====#
+CONTAINERS_OBJ_FT = ${addprefix ${OBJDIR}, ${CONTAINERS_SRC:%.cpp=%.k}}
 
-# OBJDIR = ./objs/
-# MAINDIR = ./main/
-# INCLUDES = ./includes/
-# NAME = Containers
-# CFLAGS = -Wall -Wextra -Werror
+#====#
+#Tags#
+#====#
 
-# #=========#
-# #Commandes#
-# #=========#					
+OBJDIR = ./objs/
+MAINDIR = ./main/
+INCLUDES = ./containers/
+NAME = ft_containers_std
+NAME_FT = ft_containers_ft
+CFLAGS = -Wall -Wextra -Werror 
 
-# ${OBJDIR}%.o : ${MAINDIR}%.c
-# 								@clang++ ${CFLAGS} -c $< -o $@ -I ${INCLUDES}
+#=========#
+#Commandes#
+#=========#					
 
-# ${NAME}: 						${OBJDIR} ${CONTAINERS_OBJ} -o ${NAME}
-# 								@printf "\e[32;3m$@ successfully build\e[0m\n"
+${OBJDIR}%.o : ${MAINDIR}%.cpp
+								@c++ ${CFLAGS} -c $< -o $@ -I ${INCLUDES} -D TESTED_NAMESPACE=std
 
-# ${OBJDIR}:						
-# 								@mkdir -p ${OBJDIR}
+${OBJDIR}%.k : ${MAINDIR}%.cpp
+								@c++ ${CFLAGS} -c $< -o $@ -I ${INCLUDES} -D TESTED_NAMESPACE=ft
 
-# all:							${NAME}
+${NAME}: 						${OBJDIR} ${CONTAINERS_OBJ_STD} ${NAME_FT}
+								@c++ ${CFLAGS} ${CONTAINERS_OBJ_STD} -o ${NAME}
+								@printf "\e[32;3m$@ successfully build\e[0m\n"
 
-# clean:
-# 								@rm -rf ${OBJDIR}
-# 								@printf "\e[31;3mClean files\e[0m\n"
+${NAME_FT}:						${OBJDIR} ${CONTAINERS_OBJ_FT}
+								@c++ ${CFLAGS} ${CONTAINERS_OBJ_FT} -o ${NAME_FT}
+								@printf "\e[32;3m$@ successfully build\e[0m\n"
 
-# fclean:							clean
-# 								@rm -f ${NAME}
-# 								@printf "\e[31;3mClean exec\e[0m\n"
+${OBJDIR}:						
+								@mkdir -p ${OBJDIR}
 
-# re:								fclean all
-
-# .PHONY:							all clean fclean re
-
-
-NAME =	ft_containers
-SRCS =	./main/main.cpp
-
-OBJ = $(SRCS:.cpp=.o)
-
-CXXFLAGS = -Wall -Wextra -Werror -std=c++98
-CXX = c++
-rm = rm -rf
-
-all : $(NAME)
-
-$(NAME):	$(OBJ)
-	$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
+all:							${NAME}												
 
 clean:
-	$(RM) $(OBJ)
+								@rm -rf ${OBJDIR}
+								@printf "\e[31;3mClean files\e[0m\n"
 
-fclean: clean
-	$(RM) $(NAME)
+fclean:							clean
+								@rm -f ${NAME}
+								@rm -f ${NAME_FT}
+								@printf "\e[31;3mClean exec\e[0m\n"
 
-re: fclean all
+re:								fclean all
 
-.PHONY: re bonus clean fclean all
+.PHONY:							all clean fclean re
