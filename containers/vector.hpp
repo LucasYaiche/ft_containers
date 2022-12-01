@@ -179,13 +179,12 @@ namespace ft
 				if (n > this->_capacity)
 				{
 					pointer vec = this->_alloc.allocate(n);
-					size_type old_size = this->_size;
 					for (size_type i = 0; i < this->_size; i++)
 						this->_alloc.construct(vec + i, this->_begin[i]);
-					this->clear();
+					for (size_type i = 0; i < this->_size; i++)
+						this->_alloc.destroy(this->_begin + i);
 					this->_alloc.deallocate(this->_begin, this->_capacity);
 					this->_begin = vec;
-					this->_size = old_size;
 					this->_capacity = n;
 				}
 			};
@@ -288,17 +287,20 @@ namespace ft
 			void insert (iterator position, size_type n, const value_type& val)
 			{
 				difference_type	gap = position - this->begin();
-				
-				reserve((this->_size + n) * 2);
+
+				if (_size + n > this->_capacity)
+				{
+					if (_size + n > this->_capacity * 2)
+						this->reserve(_size + n);
+					else if (this->_capacity > 0)
+						this->reserve(this->_capacity * 2);
+					else
+						this->reserve(1);
+				}
 				for (difference_type i = this->_size - 1; i >= gap; i--)
-				{
-					this->_alloc.construct(this->_begin + n + i, this->_begin[i]);
-					this->_alloc.destroy(this->_begin + i);
-				}
+					this->_begin[n + i] =  this->_begin[i];
 				for (size_type i = 0; i != n; i++)
-				{
-					this->_alloc.construct(this->_begin + gap + i, val);
-				}
+					this->_begin[gap + i] = val;
 				this->_size += n;
 			};
 

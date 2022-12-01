@@ -9,11 +9,7 @@ namespace ft
 	template <class T, class Container = ft::vector<T> >
 	class stack
 	{
-
-		protected :
-
-			Container c;
-
+			//==============================/ Member types /==============================//
 		public :
 
 			typedef Container 							container_type;
@@ -22,11 +18,19 @@ namespace ft
 			typedef typename Container::reference 		reference;
 			typedef typename Container::const_reference const_reference;
 
+			//==============================/ Member attributes /==============================//
+		protected :
+
+			Container c;
+
+			//==============================/ Constructor /==============================//
+		public :
 			explicit stack (const container_type& ctnr = container_type()) 
 			: c(ctnr) 
 			{
 			};
 
+			//==============================/ Capacity /==============================//
 			bool empty() const 
 			{
 				return this->c.empty();
@@ -37,6 +41,7 @@ namespace ft
 				return this->c.size();
 			};
 
+			//==============================/ Element access /==============================//
 			value_type& top() 
 			{
 				return this->c.back();
@@ -47,6 +52,7 @@ namespace ft
 				return this->c.back();
 			};
 
+			//==============================/ Modifiers /==============================//
 			void push (const value_type& val) 
 			{
 				this->c.push_back(val);
@@ -57,6 +63,7 @@ namespace ft
 				this->c.pop_back();
 			};
 		
+			//==============================/ Operator overloads /==============================//
 			friend bool	operator==(const stack &lhs, const stack &rhs)
 			{
 				return lhs.c == rhs.c;

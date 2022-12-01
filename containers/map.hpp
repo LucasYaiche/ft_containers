@@ -14,8 +14,8 @@ namespace ft
 	template < class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator< ft::pair<const Key,T> > >
 	class map
 	{
+			//==============================/ Node /==============================//
 		public :
-			
 			struct node
 			{
 				node 					*left;
@@ -35,9 +35,11 @@ namespace ft
 			};
 
 
+			//==============================/ Map iterator /==============================//
 			template <bool is_const>
 			class map_iterator
 			{
+					//==============================/ Map iterator /==============================//
 				public :
 
 					typedef ft::pair<const Key, T> 													pair_type;
@@ -49,11 +51,13 @@ namespace ft
 					typedef value_type* 															pointer;
 					typedef value_type& 															reference;
 
+					//==============================/ Member attributes /==============================//
 				private:
 
 					node_type *_first;
 					node_type *_end;
-
+				
+					//==============================/ Constructor & overlaod /==============================//
 				public:
 				
 					map_iterator() : _first(NULL), _end(NULL) 
@@ -88,6 +92,7 @@ namespace ft
 						return *this;
 					};
 
+					//==============================/ Getters /==============================//
 					node_type	*getFirst() const
 					{
 						return this->_first;
@@ -98,11 +103,15 @@ namespace ft
 						return this->_end;
 					};
 
+
 					node_type *base() const 
 					{
 						return this->_first;
 					};
 
+
+
+					//==============================/ Operator overloads /==============================//
 					value_type& operator*() const 
 					{
 						return this->_first->data;
@@ -170,6 +179,7 @@ namespace ft
 						return this->_first != rhs.getFirst();
 					};
 
+					//==============================/ Others /==============================//
 				private :
 
 					node_type *up_bigger_node(node_type *node)
@@ -233,6 +243,7 @@ namespace ft
 					};
 			};
 
+				//==============================/ Member types /==============================//
 			public:
 
 				typedef	Key												key_type;
@@ -240,6 +251,7 @@ namespace ft
 				typedef	ft::pair<const key_type, mapped_type>			value_type;
 				typedef	Compare											key_compare;
 
+				//==============================/ Value compare /==============================//
 			class value_compare
 			{   
 				friend class map;
@@ -261,23 +273,26 @@ namespace ft
 					};
 			};
 
-			typedef typename Alloc::template rebind<node>::other		allocator_type;
-			typedef	typename allocator_type::reference				reference;
-			typedef	typename allocator_type::const_reference		const_reference;
-			typedef	typename allocator_type::pointer				pointer;
-			typedef	typename allocator_type::const_pointer			const_pointer;
-			typedef map_iterator<false>								iterator;
-			typedef map_iterator<true>								const_iterator;
-			typedef ft::reverse_iterator<iterator>					reverse_iterator;
-			typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
-			typedef typename allocator_type::size_type				size_type;
+				//==============================/ Member types /==============================//
+				typedef typename Alloc::template rebind<node>::other		allocator_type;
+				typedef	typename allocator_type::reference				reference;
+				typedef	typename allocator_type::const_reference		const_reference;
+				typedef	typename allocator_type::pointer				pointer;
+				typedef	typename allocator_type::const_pointer			const_pointer;
+				typedef map_iterator<false>								iterator;
+				typedef map_iterator<true>								const_iterator;
+				typedef ft::reverse_iterator<iterator>					reverse_iterator;
+				typedef ft::reverse_iterator<const_iterator>			const_reverse_iterator;
+				typedef typename allocator_type::size_type				size_type;
 
+				//==============================/ Member attributes /==============================//
 			private:
 
 				allocator_type 	_alloc;
 				node			*_root;
 				key_compare		_comp;
 
+				//==============================/ Constructor & overload /==============================//
 			public:
 
 				explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
@@ -311,6 +326,7 @@ namespace ft
 					return *this;
 				};
 
+				//==============================/ Destructor /==============================//
 				~map()
 				{
 					this->clear();
@@ -321,6 +337,7 @@ namespace ft
 					return this->_alloc;
 				};
 
+				//==============================/ Element access /==============================//
 				mapped_type& at( const Key& key )
 				{
 					iterator	it;
@@ -345,6 +362,7 @@ namespace ft
 					return find(key)->second;
 				};
 
+				//==============================/ Iterators /==============================//
 				iterator begin() 
 				{
 					iterator it(search_highest(this->_root));
@@ -387,6 +405,7 @@ namespace ft
 					return const_reverse_iterator(begin());
 				};
 
+				//==============================/ Capacity /==============================//
 				bool empty() const 
 				{
 					return begin() == end();
@@ -402,6 +421,7 @@ namespace ft
 					return _alloc.max_size();
 				};
 
+				//==============================/ Modifiers /==============================//
 				void clear()
 				{
 					if(this->_root)
@@ -474,6 +494,7 @@ namespace ft
 					x._comp = temp_cmp;
 				};
 
+				//==============================/ Lookup /==============================//
 				size_type count( const Key& key ) const
 				{
 					size_type n = 1;
@@ -556,6 +577,7 @@ namespace ft
 					return (it);
 				};
 
+				//==============================/ Observers /==============================//
 				key_compare key_comp() const
 				{
 					return this->_comp;
@@ -566,6 +588,7 @@ namespace ft
 					return value_compare(this->_comp);
 				};
 
+					//==============================/ BST functions /==============================//
 				private : 
 
 					node	*add_node(const	value_type &n)
@@ -720,6 +743,7 @@ namespace ft
 					};
 	};
 	
+	//==============================/ Operator overloads /==============================//
 	template< class Key, class T, class Compare, class Alloc >
 	bool operator==( const ft::map<Key,T,Compare,Alloc>& lhs, const ft::map<Key,T,Compare,Alloc>& rhs ) 
 	{
